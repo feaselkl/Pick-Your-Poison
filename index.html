@@ -1,0 +1,586 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Catallaxy Services | Pick Your Poison</title>
+
+		<link rel="stylesheet" href="../reveal.js-6/dist/reset.css">
+		<link rel="stylesheet" href="../reveal.js-6/dist/reveal.css">
+		<link rel="stylesheet" href="../reveal.js-6/dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="../WebsiteAssets/mods.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../reveal.js-6/dist/plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h2>Pick Your Poison</h2>
+					<h3>Choosing the Right Edition of SQL Server</h3>
+
+					<a href="https://www.catallaxyservices.com">Kevin Feasel</a> (<a href="https://twitter.com/feaselkl">@feaselkl</a>)<br />
+					<a href="https://csmore.info/on/editions">https://csmore.info/on/editions</a>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Who Am I?  What Am I Doing Here?</h3>
+					<div class="container">
+						<div class="col">
+							<table class="whoami">
+								<tr>
+									<td><a href="https://csmore.info"><img src="../WebsiteAssets/Logo.png" height="100" /></a></td>
+									<td nowrap><a href="https://csmore.info">Catallaxy Services</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://curatedsql.com"><img src="../WebsiteAssets/CuratedSQLLogo.png" height="100" /></a></td>
+									<td nowrap><a href="https://curatedsql.com">Curated SQL</a></td>
+								</tr>
+								<tr>
+									<td><a href="https://www.amazon.com/Finding-Ghosts-Your-Data-Techniques/dp/1484288696"><img src="../WebsiteAssets/Finding-Ghosts.jpg" height="120" /></a></td>
+									<td nowrap><a href="https://www.amazon.com/Finding-Ghosts-Your-Data-Techniques/dp/1484288696">Finding Ghosts in Your Data</a></td>
+								</tr>
+							</table>
+						</div>
+						<div class="col">
+							<a href="http://www.twitter.com/feaselkl"><img src="../WebsiteAssets/HeadShot.jpg" height="358" width="315" /></a>
+							<br />
+							<a href="http://www.twitter.com/feaselkl">@feaselkl</a>
+						</div>
+					</div>
+				</section>
+
+				<section data-background-image="presentation/assets/background/motivation.jpg" data-background-opacity="0.2">
+					<h3>Motivation</h3>
+
+					<p>Every edition choice costs you something: Enterprise costs money, Standard costs capability, Express costs headroom, and the free developer editions cost you compliance risk.</p>
+
+					<p>There is no free lunch here, so the goal is not to find the "best" edition. It is to choose deliberately and know what you gave up. On top of this, SQL Server 2025 introduces new considerations that affect these trade-offs.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/caution.jpg" data-background-opacity="0.2">
+					<h3>Before We Start</h3>
+
+					<p>I am not a licensing representative and this is not legal advice.</p>
+
+					<p>When real money is on the line, confirm with your licensing partner before you sign anything.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li class="active">The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/server-room.jpg" data-background-opacity="0.2">
+					<h3>The 2025 Lineup</h3>
+
+					<table class="whoami">
+						<tr><th>Edition</th><th>Capacity</th><th>Notes</th></tr>
+						<tr><td><strong>Enterprise</strong></td><td>OS maximum</td><td>Full feature set</td></tr>
+						<tr><td><strong>Standard</strong></td><td>4 sockets / 32 cores, 256 GB</td><td>Basic AGs only</td></tr>
+						<tr><td><strong>Enterprise Developer</strong></td><td>OS maximum</td><td>Free, non-production</td></tr>
+						<tr><td><strong>Standard Developer</strong></td><td>Matches Standard</td><td>NEW in 2025</td></tr>
+						<tr><td><strong>Evaluation</strong></td><td>OS maximum</td><td>180 days</td></tr>
+						<tr><td><strong>Express</strong></td><td>1 socket / 4 cores, 1,410 MB</td><td>50 GB max database</td></tr>
+						<tr><td><em>Web</em></td><td colspan="2"><em>Discontinued in 2025</em></td></tr>
+					</table>
+				</section>
+
+				<section data-background-image="presentation/assets/background/binders.jpg" data-background-opacity="0.2">
+					<h3>The Developer Editions Got Renamed</h3>
+
+					<p>Developer edition is now <strong>Enterprise Developer</strong>.</p>
+
+					<p><strong>Standard Developer</strong> is new in 2025 and carries the Standard feature set, so you can certify against what you will actually run in production.</p>
+
+					<p>If your dev/test estate or install automation references "Developer," it needs attention.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/scale.jpg" data-background-opacity="0.2">
+					<h3>What Standard Actually Gained</h3>
+
+					<ul>
+						<li>Compute: lesser of 4 sockets or <strong>32 cores</strong> (was 24)</li>
+						<li>Buffer pool: <strong>256 GB</strong> (was 128 GB)</li>
+						<li><strong>Resource Governor</strong>, with full Enterprise functionality</li>
+						<li>Power BI Report Server use rights</li>
+					</ul>
+
+					<p class="fragment"><strong>The asterisk:</strong> 256 GB is <em>buffer pool only</em>. Add to that columnstore segment cache (32GB) and memory-optimized data size per database (32 GB each)</strong>.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/binders.jpg" data-background-opacity="0.2">
+					<h3>Express Grew Up</h3>
+
+					<p>Maximum database size raised from 10 GB to <strong>50 GB</strong>.</p>
+
+					<p><strong>Express with Advanced Services is discontinued.</strong> Base Express now includes everything it offered: SSDT, machine learning integration, and full-text search.</p>
+
+					<p>This meaningfully changes the ISV and embedded-application calculus.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrongway.jpg" data-background-opacity="0.2">
+					<h3>Web Edition Is Gone</h3>
+
+					<p>Web edition is discontinued in SQL Server 2025.  The upgrade path is Enterprise or Standard.</p>
+
+					<p>Web was primarily a <strong>SPLA</strong> product, so the people genuinely affected are hosting and service providers rather than typical enterprises.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/paper-stack.jpg" data-background-opacity="0.2">
+					<h3>The Biggest Change Is Reporting</h3>
+
+					<p>On-premises reporting consolidates under <strong>Power BI Report Server</strong>. No new SSRS versions will ship. SSRS 2022 is the last, supported through <strong>January 11, 2033</strong>.</p>
+
+					<p class="fragment">The licensing part is the real news: PBIRS use rights now extend to <strong>Standard edition under any license type</strong>. Previously this required Enterprise plus active Software Assurance.</p>
+
+					<p class="fragment">Also gone: DQS, MDS, and Reporting Services upgrades are all unsupported on 2025.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+
+					<aside class="notes">
+						Demo 1 -- Scripts/01, Parts 1 to 4. THREE windows: 1433 Standard, 1434 Enterprise, 1435 Express, all connected and tested BEFORE the session. Part 2 is the capacity beat and Express is the star -- cpu_count vs scheduler_count shows a cap being enforced, while Standard and Enterprise come back IDENTICAL. Say that out loud: the 32-core ceiling does not bind here and will not bind for most of their workloads either. Part 3 proves the six features are really in Contoso. ASK FOR GUESSES on how many block a move to Standard before running Part 4. Part 4 is the reveal: all six come back, and the real answer to the Part 3 question is zero. The DMV over-reports. ~4 minutes. Part 5 is NOT part of this demo -- save it for the AI slide in Section 3.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li class="active">The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/problem.jpg" data-background-opacity="0.2">
+					<h3>High Availability Is the Dividing Line</h3>
+
+					<p><strong>2025 did not move this.</strong></p>
+
+					<p>Standard gets <strong>basic availability groups</strong> only: two replicas, one database, non-readable secondary.</p>
+
+					<p>Always On AGs, contained AGs, and distributed AGs remain Enterprise-only. FCI is capped at two nodes on Standard versus sixteen on Enterprise.</p>
+
+					<p class="fragment">If you were waiting for 2025 Standard to give you real availability groups, it did not.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/problem.jpg" data-background-opacity="0.2">
+					<h3>The Footnote That Ruins Your Warehouse</h3>
+
+					<p>Batch mode degree of parallelism is limited to <strong>2 on Standard</strong> and <strong>1 on Express</strong>.</p>
+
+					<p>This is why "we bought Standard and our columnstore warehouse is slow" is a real support call.</p>
+
+					<aside class="notes">
+						Batch mode DOP capped at 2 on Standard. This is a footnote in a Microsoft feature table and it is worth more than most of the checkboxes above it. VERIFIED on identical 16-core hardware: Enterprise ran the same aggregate at DOP 16, Standard at DOP 2. Demo 3 shows it live, so plant the seed here. Note for the demo: at 1M rows the query is too cheap to go parallel on its own, so script 03 forces it with the documented ENABLE_PARALLEL_PLAN_PREFERENCE hint -- say so out loud rather than letting someone think you rigged it.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/background/problem.jpg" data-background-opacity="0.2">
+					<h3>Other Enterprise-Only Limits Worth Knowing</h3>
+
+					<ul>
+						<li><strong>Maintenance windows:</strong> online and resumable index operations, online schema change, online page and file restore, fast recovery</li>
+						<li><strong>Data warehouse:</strong> star join optimizations, parallel query processing on partitioned tables, global batch aggregation</li>
+						<li><strong>Scale:</strong> read-ahead, advanced scanning, AVX-512, memory-optimized TempDB metadata, NUMA-aware large pages</li>
+						<li><strong>Operations:</strong> parallel index maintenance, parallel consistency check (DBCC)</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/magnifying-glass.jpg" data-background-opacity="0.2">
+					<h3>The Surprise:  AI Is Not an Edition Feature</h3>
+
+					<p>Native vector data type, DiskANN vector indexing, external models, local ONNX models, embedding generation, chunking.</p>
+
+					<p><strong>All of it runs on Express.</strong></p>
+
+					<p class="fragment">Edition is not what gates AI in 2025. The <code>PREVIEW_FEATURES</code> database-scoped configuration is. Functionality like DiskANN indexing, local ONNX models, fuzzy string matching, and change event streaming all require it.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li class="active">The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/handshake.jpg" data-background-opacity="0.2">
+					<h3>Your Edition Is No Longer the Only Axis</h3>
+
+					<p>Two shops both running Enterprise 2025 can have <strong>different feature sets</strong> based on how they pay.</p>
+
+					<p>Three ways to hold a license:</p>
+					<ul>
+						<li>Perpetual license only</li>
+						<li>License with <strong>Software Assurance</strong> or a SQL Server subscription</li>
+						<li><strong>Pay-as-you-go</strong> through Azure Arc</li>
+					</ul>
+
+					<aside class="notes">
+						New concept for almost everyone. Slow down here. The one-sentence version: two shops both running Enterprise 2025 can have different feature sets depending on whether they carry SA. If that does not land, the next three slides do not either.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/background/handshake.jpg" data-background-opacity="0.2">
+					<h3>What SA or a Subscription Actually Buys</h3>
+
+					<p>Gated behind SA or subscription via Azure Arc:</p>
+					<ul>
+						<li>Best Practices Assessment</li>
+						<li>Point-in-time restore and automated backups to local storage</li>
+						<li>Automatic updates, monitoring, client connection summary</li>
+						<li>Extended Security Update subscription</li>
+					</ul>
+
+					<p class="fragment">Plus the licensing benefits:  free version upgrades, the HA/DR passive replica benefit, unlimited virtualization, license-by-VM, and the 180-day dual-use benefit.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/coins-stacked.jpg" data-background-opacity="0.2">
+					<h3>Pay-As-You-Go Is a Real Third Option</h3>
+
+					<p>Per-core, per-hour, metered through Azure with no upfront license purchase.</p>
+
+					<p><strong>Watch the Linux caveats:</strong></p>
+					<ul>
+						<li>No automatic passive replica detection, so every instance bills as active</li>
+						<li>Core count derived from the OS environment</li>
+						<li>No connected-user verification on readable secondaries</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/scale.jpg" data-background-opacity="0.2">
+					<h3>What This Does to the Math</h3>
+
+					<p>The comparison was never just Enterprise versus Standard. It is <strong>edition &times; license type</strong>.</p>
+
+					<p class="fragment">Enterprise <em>without</em> Software Assurance has no "passive" replica benefit, no unlimited virtualization, no free version upgrades, and no Arc assessment, PITR, or automated backups.</p>
+
+					<p class="fragment">Standard <em>with</em> SA gets all of those, and in 2025 it also gets Power BI Report Server.</p>
+
+					<p class="fragment">Price the pair, not the edition.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li class="active">Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/calculator.jpg" data-background-opacity="0.2">
+					<h3>How to Count Cores</h3>
+
+					<ul>
+						<li><strong>Four-core minimum</strong> per operating system environment</li>
+						<li>Hyperthreading <strong>counts on VMs</strong>, but not on physical deployments</li>
+						<li>Containers and Kubernetes follow the same vCore rules</li>
+						<li>Enterprise under <strong>Server + CAL</strong> is not available for new agreements and caps at 20 cores per instance</li>
+					</ul>
+
+					<aside class="notes">
+						The four-core minimum surprises people with small VMs. Hyperthreading counting on VMs but not physical is the one people get wrong in both directions. Server + CAL is legacy-only -- mention it and move on unless someone bites.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/background/caution.jpg" data-background-opacity="0.2">
+					<h3>The Passive Replica Trap</h3>
+
+					<p>Your free passive secondary <strong>is not free without Software Assurance</strong>.</p>
+
+					<p>This is a common accidental-noncompliance finding, and it is easy to walk into:  someone stands up a DR replica, nobody checks the SA status, and the exposure sits there until an audit.</p>
+
+					<p class="fragment">Unlimited virtualization has the same shape: it requires Enterprise <em>plus</em> SA.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/checklist.jpg" data-background-opacity="0.2">
+					<h3>Are You Using What You Pay For?</h3>
+
+					<p><code>sys.dm_db_persisted_sku_features</code> lists edition-restricted features persisted in a database.  It is the right place to start.</p>
+
+					<p class="fragment"><strong>But it misleads in both directions.</strong>  It still reports partitioning, compression, columnstore, In-Memory OLTP and CDC &mdash; all Standard features since 2016 SP1.  Six "blockers" that block nothing.</p>
+
+					<p class="fragment">And zero rows would not mean safety either.  It answers "will it restore," never "will it work."</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+
+					<aside class="notes">
+						Demo 2 -- Scripts/02. The Monday-morning demo. Part 1 is the hook and it is slightly uncomfortable: the audit immediately flags the demo environment itself, because two of the three instances are Developer editions. Lean into it -- that is exactly how a 'temporary' dev box becomes a licensing violation. Then the Contoso vs ContosoStaging contrast: one database is stuffed with features, the other has none, and the DMV can barely tell them apart. Part 4 returns nothing because there is no AG here; say so plainly rather than pretending. ~4 minutes. Mention the dbatools script in the repo while this runs.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li class="active">Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/arrow-right.jpg" data-background-opacity="0.2">
+					<h3>Upgrading Is the Easy Direction</h3>
+
+					<p>Setup &rarr; Maintenance &rarr; <strong>Edition Upgrade</strong>, or <code>/ACTION=EditionUpgrade</code> from the command line.</p>
+
+					<p>On a failover cluster instance, running it on one node is sufficient.  The Database Engine does not take resources offline, but you must restart the instance or fail over afterward.</p>
+
+					<p>You can upgrade to 2025 from: SQL Server 2014 SP3, 2016 SP3, 2017, 2019, and 2022.</p>
+
+					<aside class="notes">
+						Fast. This is the easy half and the room does not need convincing. The FCI detail is the only genuinely useful nugget -- one node is enough, but you must restart or fail over afterward.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrongway.jpg" data-background-opacity="0.2">
+					<h3>There Is No In-Place Downgrade</h3>
+
+					<p>Downgrading means: back up everything including system databases, move master/model/msdb aside, fully uninstall, restart, reinstall with the same instance name, patch, then restore.</p>
+
+					<p class="fragment">Budget real downtime. The step-by-step runbook is in the handout.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrongway.jpg" data-background-opacity="0.2">
+					<h3>And the Restore Is the Easy Part</h3>
+
+					<p>The pre-flight check reports three blockers. The restore to Standard succeeds anyway. Every row is there.</p>
+
+					<p class="fragment">Then your maintenance window stops fitting, your columnstore queries drop from DOP 16 to DOP 2, and your availability group is gone.</p>
+
+					<p class="fragment">None of that is persisted in a data file, so none of it shows up in the DMV.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/demo.jpg" data-background-opacity="0.2">
+					<h3>Demo Time</h3>
+
+					<aside class="notes">
+						Demo 3 -- Scripts/03, the payoff. Part 1 is pre-run on Enterprise; the backup should already exist on the shared volume. Live: show the DMV reporting three blockers, run the restore, let it SUCCEED anyway, then run the online index rebuild and let it FAIL on screen. Then the DOP comparison. ~2 minutes. VERIFIED error text, Msg 1712: 'Online index operations can only be performed in Enterprise edition of SQL Server or Azure SQL Edge.' Exactly two errors should appear, both intentional. REHEARSE THIS -- confirm the text is legible and the plan DOP difference is visible from the back.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li class="active">When the Answer Isn't an Edition</li>
+						<li>The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/clouds.jpg" data-background-opacity="0.2">
+					<h3>In PaaS There Are No Editions</h3>
+
+					<p>Azure SQL Database has <strong>service tiers</strong>, not editions. The question becomes tier and sizing.</p>
+
+					<ul>
+						<li><strong>Azure SQL Database:</strong> General Purpose, Business Critical, Hyperscale (now the recommended default for new OLTP and HTAP workloads)</li>
+						<li><strong>Azure SQL Managed Instance:</strong> GP, Next-gen GP (GA November 2025), Business Critical</li>
+						<li><strong>SQL Server on Azure VM:</strong> editions apply exactly as on-premises</li>
+						<li><strong>SQL database in Fabric:</strong> a different model again, and moving fast</li>
+					</ul>
+
+					<p class="fragment"><strong>Naming trap:</strong> the DTU model's "Standard" tier has nothing to do with Standard edition.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/coins-stacked.jpg" data-background-opacity="0.2">
+					<h3>Azure Hybrid Benefit Does the Conversion</h3>
+
+					<p>AHB turns "which edition do I own" into "what can I run in Azure":</p>
+
+					<table class="whoami">
+						<tr><th>You own</th><th>You get</th></tr>
+						<tr><td>1 Standard core</td><td>1 General Purpose core</td></tr>
+						<tr><td>1 Enterprise core</td><td>1 Business Critical core</td></tr>
+						<tr><td>1 Enterprise core</td><td>4 General Purpose cores</td></tr>
+					</table>
+
+					<p class="fragment">This benefit requires Software Assurance.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/clouds.jpg" data-background-opacity="0.2">
+					<h3>Enterprise Features that Just Come Included</h3>
+
+					<p>Business Critical ships a <strong>readable secondary replica</strong>, giving you effectively twice the vCores and memory for the same price if you can split read-write from read-only traffic.</p>
+
+					<p>On-premises, that readable secondary is an Enterprise-only Always On capability.</p>
+
+					<p class="fragment">Managed Instance also has a <strong>license-free DR benefit</strong>: you can designate a secondary as DR-only and skip vCore licensing on it.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/clouds.jpg" data-background-opacity="0.2">
+					<h3>The Hybrid Middle Ground</h3>
+
+					<p>The <strong>Managed Instance link feature</strong> uses distributed availability group technology and works on <strong>Standard as well as Enterprise</strong> in 2025.</p>
+
+					<p>A Standard shop can offload reads or establish DR to Azure without buying Enterprise.</p>
+
+					<aside class="notes">
+						Genuinely underused and often the cheapest answer to 'we need a readable secondary.' The MI link works on Standard, not just Enterprise. Worth emphasizing for anyone who just decided they need Enterprise for HA.
+					</aside>
+				</section>
+
+				<section data-background-image="presentation/assets/image/Bubbles.jpg" data-background-opacity="0.4">
+					<h3>Agenda</h3>
+
+					<ol>
+						<li>The 2025 Edition Landscape</li>
+						<li>The Limits That Actually Bite</li>
+						<li>The Second Axis: License Type</li>
+						<li>Counting Cores and Staying Compliant</li>
+						<li>Changing Editions</li>
+						<li>When the Answer Isn't an Edition</li>
+						<li class="active">The Decision Framework</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/target.jpg" data-background-opacity="0.2">
+					<h3>The Framework</h3>
+
+					<p>Work the questions in this order:</p>
+					<ol>
+						<li>Should this be on-premises at all?</li>
+						<li>What are the <strong>HA/DR</strong> requirements?</li>
+						<li>What is the <strong>capacity ceiling</strong> and which cap actually binds?</li>
+						<li>Do you need on-premises <strong>reporting</strong>?</li>
+						<li>What <strong>license type</strong> do you hold?</li>
+						<li>Then, and only then, budget.</li>
+					</ol>
+				</section>
+
+				<section data-background-image="presentation/assets/background/target.jpg" data-background-opacity="0.2">
+					<h3>The Framework</h3>
+
+					<img src="presentation/assets/image/edition-decision-flowchart.svg" alt="Edition decision flowchart" style="max-height: 78vh; background: none; border: none; box-shadow: none;" />
+				</section>
+
+				<section data-background-image="presentation/assets/background/scale.jpg" data-background-opacity="0.2">
+					<h3>When Enterprise Earns Its Price</h3>
+
+					<p>Usually <strong>high availability</strong>, <strong>online maintenance</strong>, or <strong>data warehouse parallelism</strong>.</p>
+
+					<p>Rarely raw capacity: 32 cores and 256 GB covers a great many workloads that used to force the upgrade.</p>
+
+					<p class="fragment">2025 Standard is now sufficient in places 2022 Standard was not. Re-run the decision if you last made it before the release.</p>
+				</section>
+
+				<section data-background-image="presentation/assets/background/caution.jpg" data-background-opacity="0.2">
+					<h3>Common Mistakes</h3>
+
+					<ul>
+						<li>Buying Enterprise "just in case we need it"</li>
+						<li>Assuming 2025 Standard got real availability groups</li>
+						<li>Ignoring Express limits until production</li>
+						<li>Letting Developer edition drift into production use</li>
+						<li>Treating edition as a purchasing decision made after the architecture</li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrappingup.jpg" data-background-opacity="0.2">
+					<h3>Wrapping Up</h3>
+
+					<p>Edition choice is an architecture decision, not a purchasing decision. Make it before you design the solution.</p>
+
+					<p>Key takeaways:</p>
+					<ul>
+						<li>2025 Standard gained capacity and Resource Governor, <strong>not availability groups</strong></li>
+						<li>The reporting change may be worth more than the engine changes</li>
+						<li><strong>License type</strong> is now a second axis alongside edition</li>
+						<li>Upgrades are in-place. <strong>Downgrades are not.</strong></li>
+					</ul>
+				</section>
+
+				<section data-background-image="presentation/assets/background/wrappingup.jpg" data-background-opacity="0.2">
+					<h3>Wrapping Up</h3>
+
+					<p>
+						To learn more, go here:
+						<br />
+						<a href="https://csmore.info/on/editions">https://csmore.info/on/editions</a>
+					</p>
+					<br />
+					<p>
+						And for help, contact me:
+						<br />
+						<a href="mailto:feasel@catallaxyservices.com">feasel@catallaxyservices.com</a> | <a href="https://www.twitter.com/feaselkl">@feaselkl</a>
+					</p>
+					<br />
+					<p>
+						Catallaxy Services consulting:
+						<br />
+						<a href="https://csmore.info/contact">https://CSmore.info/on/contact</a>
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="../reveal.js-6/dist/reveal.js"></script>
+		<script src="../reveal.js-6/dist/plugin/zoom.js"></script>
+		<script src="../reveal.js-6/dist/plugin/notes.js"></script>
+		<script src="../reveal.js-6/dist/plugin/search.js"></script>
+		<script src="../reveal.js-6/dist/plugin/markdown.js"></script>
+		<script src="../reveal.js-6/dist/plugin/math.js"></script>
+		<script src="../reveal.js-6/dist/plugin/highlight.js"></script>
+		<script src="../reveal.js-6/plugin/chart/Chart.min.js"></script>
+		<script src="../reveal.js-6/plugin/chart/plugin.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				width: '70%',
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+				transition: 'fade',
+
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath, RevealChart ]
+			});
+		</script>
+	</body>
+</html>

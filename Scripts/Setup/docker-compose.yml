@@ -1,0 +1,73 @@
+# Three SQL Server 2025 instances on one host, one per edition, each with the
+# demo databases baked in.
+#
+#   docker compose -f Scripts/Setup/docker-compose.yml up -d --build
+#
+#   localhost,1433 -> Standard Developer   (EngineEdition 2)
+#   localhost,1434 -> Enterprise Developer (EngineEdition 3)
+#   localhost,1435 -> Express              (EngineEdition 4)
+#
+# Why three. Standard and Enterprise report IDENTICAL capacity on any host with
+# fewer than 32 cores, because Standard's cap never binds there -- which is the
+# talk's thesis, but makes for a dull demo on its own. Express is limited to the
+# lesser of 1 socket or 4 cores, so it is the only edition whose ceiling is
+# observable on a laptop: compare cpu_count across all three. Verified on a
+# 16-logical-processor host -- Standard 16, Enterprise 16, Express 8.
+#
+# Standard Developer and Enterprise Developer are free, non-production editions.
+# Express is free for any use.
+
+services:
+  standard:
+    build:
+      context: .
+      args:
+        SQL_PID: StandardDeveloper
+    image: pyp-standard-dev
+    container_name: pyp-standard-dev
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SqlServerDemo2025!"
+      MSSQL_PID: "StandardDeveloper"
+      MSSQL_AGENT_ENABLED: "true"
+    volumes:
+      # Shared with the Enterprise instance so Demo 3 can back up on one and
+      # restore on the other.
+      - pyp-shared-backup:/var/opt/mssql/backup
+
+  enterprise:
+    build:
+      context: .
+      args:
+        SQL_PID: EnterpriseDeveloper
+    image: pyp-enterprise-dev
+    container_name: pyp-enterprise-dev
+    ports:
+      - "1434:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SqlServerDemo2025!"
+      MSSQL_PID: "EnterpriseDeveloper"
+      MSSQL_AGENT_ENABLED: "true"
+    volumes:
+      - pyp-shared-backup:/var/opt/mssql/backup
+
+  express:
+    build:
+      context: .
+      args:
+        SQL_PID: Express
+    image: pyp-express
+    container_name: pyp-express
+    ports:
+      - "1435:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SqlServerDemo2025!"
+      MSSQL_PID: "Express"
+      # No MSSQL_AGENT_ENABLED -- Express has no SQL Server Agent.
+
+volumes:
+  pyp-shared-backup:

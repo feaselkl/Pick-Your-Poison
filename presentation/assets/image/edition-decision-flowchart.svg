@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 880" font-family="Helvetica, Arial, sans-serif">
+	<style>
+		.title    { font-size: 30px; font-weight: bold; fill: #f0c674; }
+		.q        { font-size: 23px; fill: #ffffff; }
+		.qsub     { font-size: 18px; fill: #999999; }
+		.edge     { font-size: 19px; fill: #cccccc; font-style: italic; }
+		.outcome  { font-size: 30px; font-weight: bold; }
+		.osub     { font-size: 18px; fill: #cccccc; }
+		.note     { font-size: 18px; fill: #aaaaaa; font-style: italic; }
+		.box      { fill: #141414; fill-opacity: 0.88; stroke: #7a7a7a; stroke-width: 2; }
+		.ent      { fill: #141414; fill-opacity: 0.88; stroke: #f0c674; stroke-width: 3; }
+		.std      { fill: #141414; fill-opacity: 0.88; stroke: #b5bd68; stroke-width: 3; }
+		.exp      { fill: #141414; fill-opacity: 0.88; stroke: #81a2be; stroke-width: 3; }
+		.paas     { fill: #141414; fill-opacity: 0.88; stroke: #b294bb; stroke-width: 3; }
+		.line     { stroke: #7a7a7a; stroke-width: 2.5; fill: none; }
+	</style>
+
+	<defs>
+		<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+				markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M 0 0 L 10 5 L 0 10 z" fill="#7a7a7a" />
+		</marker>
+	</defs>
+
+	<text x="40" y="42" class="title">Choosing a SQL Server Edition</text>
+
+	<!-- Q1 -->
+	<rect x="40" y="75" width="700" height="80" rx="8" class="box" />
+	<text x="65" y="112" class="q">Should this run on-premises at all?</text>
+	<text x="65" y="138" class="qsub">Managed service removes the edition question entirely</text>
+
+	<!-- Q1 -> PaaS -->
+	<path d="M 740 115 L 900 115" class="line" marker-end="url(#arrow)" />
+	<text x="762" y="105" class="edge">no</text>
+
+	<rect x="905" y="70" width="455" height="118" rx="8" class="paas" />
+	<text x="928" y="108" class="outcome" fill="#b294bb">Azure SQL DB / MI</text>
+	<text x="928" y="138" class="osub">Tiers, not editions.  Business Critical</text>
+	<text x="928" y="162" class="osub">includes a readable secondary.</text>
+
+	<!-- Q1 -> Q2 -->
+	<path d="M 390 155 L 390 215" class="line" marker-end="url(#arrow)" />
+	<text x="402" y="192" class="edge">yes</text>
+
+	<!-- Q2 -->
+	<rect x="40" y="218" width="700" height="80" rx="8" class="box" />
+	<text x="65" y="255" class="q">Need real availability groups, readable</text>
+	<text x="65" y="283" class="q">secondaries, or online index maintenance?</text>
+
+	<!-- Q2 -> Q3 -->
+	<path d="M 390 298 L 390 358" class="line" marker-end="url(#arrow)" />
+	<text x="402" y="335" class="edge">no</text>
+
+	<!-- Q3 -->
+	<rect x="40" y="361" width="700" height="80" rx="8" class="box" />
+	<text x="65" y="398" class="q">Will you exceed 32 cores or 256 GB?</text>
+	<text x="65" y="424" class="qsub">Buffer pool only — columnstore stays capped at 32 GB</text>
+
+	<!-- Q3 -> Q4 -->
+	<path d="M 390 441 L 390 501" class="line" marker-end="url(#arrow)" />
+	<text x="402" y="478" class="edge">no</text>
+
+	<!-- Q4 -->
+	<rect x="40" y="504" width="700" height="80" rx="8" class="box" />
+	<text x="65" y="541" class="q">Heavy columnstore or data warehouse?</text>
+	<text x="65" y="567" class="qsub">Batch mode DOP is capped at 2 on Standard</text>
+
+	<!-- Enterprise, fed by Q2 / Q3 / Q4 -->
+	<path d="M 740 258 L 900 258" class="line" marker-end="url(#arrow)" />
+	<text x="762" y="248" class="edge">yes</text>
+	<path d="M 740 401 L 900 401" class="line" marker-end="url(#arrow)" />
+	<text x="762" y="391" class="edge">yes</text>
+	<path d="M 740 544 L 900 544" class="line" marker-end="url(#arrow)" />
+	<text x="762" y="534" class="edge">yes</text>
+
+	<rect x="905" y="225" width="455" height="352" rx="8" class="ent" />
+	<text x="928" y="272" class="outcome" fill="#f0c674">Enterprise</text>
+	<text x="928" y="312" class="osub">This is where Enterprise earns its price.</text>
+	<text x="928" y="344" class="osub">Not raw capacity — 32 cores and 256 GB</text>
+	<text x="928" y="368" class="osub">covers a great many workloads now.</text>
+	<text x="928" y="412" class="osub">Check whether Managed Instance</text>
+	<text x="928" y="436" class="osub">Business Critical gets you the same</text>
+	<text x="928" y="460" class="osub">capability for less.</text>
+	<text x="928" y="504" class="osub">Server + CAL is legacy-only and</text>
+	<text x="928" y="528" class="osub">caps at 20 cores.</text>
+
+	<!-- Q4 -> Q5 -->
+	<path d="M 390 584 L 390 644" class="line" marker-end="url(#arrow)" />
+	<text x="402" y="621" class="edge">no</text>
+
+	<!-- Q5 -->
+	<rect x="40" y="647" width="700" height="80" rx="8" class="box" />
+	<text x="65" y="684" class="q">One small workload, under 50 GB?</text>
+	<text x="65" y="710" class="qsub">Express now includes former Advanced Services features</text>
+
+	<!-- Q5 -> Express -->
+	<path d="M 740 687 L 900 687" class="line" marker-end="url(#arrow)" />
+	<text x="762" y="677" class="edge">yes</text>
+
+	<rect x="905" y="640" width="455" height="94" rx="8" class="exp" />
+	<text x="928" y="682" class="outcome" fill="#81a2be">Express</text>
+	<text x="928" y="714" class="osub">Free.  1 socket / 4 cores, 1,410 MB.</text>
+
+	<!-- Q5 -> Standard -->
+	<path d="M 390 727 L 390 782" class="line" marker-end="url(#arrow)" />
+	<text x="402" y="762" class="edge">no</text>
+
+	<rect x="40" y="785" width="700" height="80" rx="8" class="std" />
+	<text x="65" y="827" class="outcome" fill="#b5bd68">Standard</text>
+	<text x="240" y="827" class="osub">— and in 2025 that covers more than it used to.</text>
+	<text x="65" y="853" class="osub">Resource Governor, 32 cores, 256 GB, and Power BI Report Server rights.</text>
+
+	<!-- Footer note -->
+	<text x="905" y="790" class="note">Dev and test are always free:</text>
+	<text x="905" y="816" class="note">Standard Developer or Enterprise</text>
+	<text x="905" y="842" class="note">Developer.  Match production.</text>
+</svg>
