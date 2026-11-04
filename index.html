@@ -190,7 +190,7 @@
 					<p>This is why "we bought Standard and our columnstore warehouse is slow" is a real support call.</p>
 
 					<aside class="notes">
-						Batch mode DOP capped at 2 on Standard. This is a footnote in a Microsoft feature table and it is worth more than most of the checkboxes above it. VERIFIED on identical 16-core hardware: Enterprise ran the same aggregate at DOP 16, Standard at DOP 2. Demo 3 shows it live, so plant the seed here. Note for the demo: at 1M rows the query is too cheap to go parallel on its own, so script 03 forces it with the documented ENABLE_PARALLEL_PLAN_PREFERENCE hint -- say so out loud rather than letting someone think you rigged it.
+						Batch mode DOP capped at 2 on Standard. This is a footnote in a Microsoft feature table and it is worth more than most of the checkboxes above it. VERIFIED on identical 16-core hardware: Enterprise ran the same aggregate at DOP 16, Standard at DOP 2. Demo 3 shows it live, so plant the seed here. Note for the demo: at 1M rows the query is too cheap to go parallel on its own, so script 03 forces it with the undocumented (but widely used) ENABLE_PARALLEL_PLAN_PREFERENCE hint -- say so out loud rather than letting someone think you rigged it.
 					</aside>
 				</section>
 

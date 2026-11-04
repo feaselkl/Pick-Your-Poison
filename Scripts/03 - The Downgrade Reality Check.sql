@@ -144,8 +144,11 @@ GO
    twice -- which demonstrates nothing.  Lowering the cost threshold does
    not help; the query is simply too cheap.
 
-   ENABLE_PARALLEL_PLAN_PREFERENCE is a documented USE HINT that forces a
-   parallel plan, which is what lets the ceiling become visible.  In a real
+   ENABLE_PARALLEL_PLAN_PREFERENCE is an undocumented (but widely used)
+   USE HINT that forces a parallel plan, which is what lets the ceiling
+   become visible.  It is not in Microsoft's query hint documentation and
+   does not appear in sys.dm_exec_valid_use_hints, so treat it as a demo
+   and testing tool, not something to ship in production code.  In a real
    warehouse with hundreds of millions of rows you hit this cap without
    asking for it.  Here we have to ask. */
 
