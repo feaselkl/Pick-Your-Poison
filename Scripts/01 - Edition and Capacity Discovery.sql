@@ -115,27 +115,39 @@ GO
 USE Contoso;
 GO
 
-SELECT Feature = 'Partitioning',        Present = CASE WHEN EXISTS (SELECT 1 FROM sys.partition_schemes) THEN 'YES' ELSE 'no' END,
-       Detail = (SELECT CONCAT(COUNT(DISTINCT p.partition_number), ' partitions on dbo.SalesFact')
+SELECT
+   Feature = 'Partitioning',
+   Present = CASE WHEN EXISTS (SELECT 1 FROM sys.partition_schemes) THEN 'YES' ELSE 'no' END,
+   Detail = (SELECT CONCAT(COUNT(DISTINCT p.partition_number), ' partitions on dbo.SalesFact')
                  FROM sys.partitions p WHERE p.object_id = OBJECT_ID('dbo.SalesFact'))
 UNION ALL
-SELECT 'Data compression',    CASE WHEN EXISTS (SELECT 1 FROM sys.partitions WHERE data_compression > 0 AND object_id > 100) THEN 'YES' ELSE 'no' END,
-       (SELECT CONCAT(COUNT(*), ' compressed partition(s)') FROM sys.partitions WHERE data_compression > 0 AND object_id > 100)
+SELECT
+   Feature = 'Data compression',
+   Present = CASE WHEN EXISTS (SELECT 1 FROM sys.partitions WHERE data_compression > 0 AND object_id > 100) THEN 'YES' ELSE 'no' END,
+   Detail = (SELECT CONCAT(COUNT(*), ' compressed partition(s)') FROM sys.partitions WHERE data_compression > 0 AND object_id > 100)
 UNION ALL
-SELECT 'Clustered columnstore', CASE WHEN EXISTS (SELECT 1 FROM sys.indexes WHERE type = 5) THEN 'YES' ELSE 'no' END,
-       (SELECT CONCAT(COUNT(*), ' rowgroup(s)') FROM sys.column_store_row_groups)
+SELECT
+   Feature = 'Clustered columnstore',
+   Present = CASE WHEN EXISTS (SELECT 1 FROM sys.indexes WHERE type = 5) THEN 'YES' ELSE 'no' END,
+   Detail = (SELECT CONCAT(COUNT(*), ' rowgroup(s)') FROM sys.column_store_row_groups)
 UNION ALL
-SELECT 'In-Memory OLTP',      CASE WHEN EXISTS (SELECT 1 FROM sys.tables WHERE is_memory_optimized = 1) THEN 'YES' ELSE 'no' END,
-       (SELECT CONCAT(COUNT(*), ' memory-optimized table(s)') FROM sys.tables WHERE is_memory_optimized = 1)
+SELECT
+   Feature = 'In-Memory OLTP',
+   Present = CASE WHEN EXISTS (SELECT 1 FROM sys.tables WHERE is_memory_optimized = 1) THEN 'YES' ELSE 'no' END,
+   Detail = (SELECT CONCAT(COUNT(*), ' memory-optimized table(s)') FROM sys.tables WHERE is_memory_optimized = 1)
 UNION ALL
-SELECT 'Change data capture', CASE WHEN (SELECT is_cdc_enabled FROM sys.databases WHERE database_id = DB_ID()) = 1 THEN 'YES' ELSE 'no' END,
-       -- sys.tables.is_tracked_by_cdc, not cdc.change_tables: the cdc schema
-       -- does not exist at all where CDC was never enabled, and a direct
-       -- reference to it fails at compile time on Express.
-       (SELECT CONCAT(COUNT(*), ' captured table(s)') FROM sys.tables WHERE is_tracked_by_cdc = 1)
+SELECT
+   Feature = 'Change data capture',
+   Present = CASE WHEN (SELECT is_cdc_enabled FROM sys.databases WHERE database_id = DB_ID()) = 1 THEN 'YES' ELSE 'no' END,
+   -- sys.tables.is_tracked_by_cdc, not cdc.change_tables: the cdc schema
+   -- does not exist at all where CDC was never enabled, and a direct
+   -- reference to it fails at compile time on Express.
+   Detail = (SELECT CONCAT(COUNT(*), ' captured table(s)') FROM sys.tables WHERE is_tracked_by_cdc = 1)
 UNION ALL
-SELECT 'TDE',                 CASE WHEN (SELECT is_encrypted FROM sys.databases WHERE database_id = DB_ID()) = 1 THEN 'YES' ELSE 'no' END,
-       (SELECT CONCAT('encryption_state = ', MAX(encryption_state)) FROM sys.dm_database_encryption_keys WHERE database_id = DB_ID());
+SELECT
+   Feature = 'TDE',
+   Present = CASE WHEN (SELECT is_encrypted FROM sys.databases WHERE database_id = DB_ID()) = 1 THEN 'YES' ELSE 'no' END,
+   Detail = (SELECT CONCAT('encryption_state = ', MAX(encryption_state)) FROM sys.dm_database_encryption_keys WHERE database_id = DB_ID());
 GO
 
 
